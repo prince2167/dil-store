@@ -2,14 +2,22 @@
 
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { IProducts } from "@/types";
-import React, {
+import {
+  Dispatch,
   ReactNode,
+  SetStateAction,
   createContext,
   useContext,
-  useEffect,
   useState,
 } from "react";
 
+interface IAddress {
+  email: string;
+  address: string;
+  city: string;
+  state: string;
+  postalCode: string;
+}
 interface IProductContext {
   addProductTOCart: (product: IProducts) => void;
   removeFromCart: (id: number) => void;
@@ -19,6 +27,12 @@ interface IProductContext {
   setQuery: React.Dispatch<React.SetStateAction<string>>;
   quantity: number;
   setQuantity: React.Dispatch<React.SetStateAction<number>>;
+  address: IAddress;
+  setAddress: React.Dispatch<React.SetStateAction<IAddress>>;
+  addresses: IAddress[];
+  setAddresses: React.Dispatch<React.SetStateAction<IAddress[]>>;
+  selectedAddress: {} | IAddress;
+  setSelectedAddess: Dispatch<SetStateAction<{} | IAddress>>;
 }
 
 interface IProps {
@@ -34,13 +48,44 @@ const ProductContext = createContext<IProductContext>({
   setCart: () => {},
   quantity: 1,
   setQuantity: () => {},
+  address: {
+    email: "",
+    address: "",
+    city: "",
+    state: "",
+    postalCode: "",
+  },
+  setAddress: () => {},
+  addresses: [{ email: "", address: "", city: "", state: "", postalCode: "" }],
+  setAddresses: () => {},
+  selectedAddress: {},
+  setSelectedAddess: () => {},
 });
 
 const ProductProvider = ({ children }: IProps) => {
   const [cart, setCart] = useLocalStorage<IProducts[]>("cart", []);
   const [query, setQuery] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const [address, setAddress] = useState<IAddress>({
+    email: "",
+    address: "",
+    city: "",
+    state: "",
+    postalCode: "",
+  });
+  const [addresses, setAddresses] = useLocalStorage<IAddress[]>("address", [
+    {
+      email: "prince@gmail.com",
+      address: "Najafgargh",
+      city: "New Delhi",
+      state: "Delhi",
+      postalCode: "110072",
+    },
+  ]);
 
+  const [selectedAddress, setSelectedAddess] = useState<IAddress | {}>(
+    addresses[0]
+  );
   const addProductTOCart = (product: IProducts) => {
     setCart([product, ...cart]);
   };
@@ -60,6 +105,12 @@ const ProductProvider = ({ children }: IProps) => {
         setQuery,
         quantity,
         setQuantity,
+        address,
+        setAddress,
+        addresses,
+        setAddresses,
+        selectedAddress,
+        setSelectedAddess,
       }}
     >
       {children}

@@ -77,52 +77,24 @@ const Cart = ({ product }: any) => {
             type="button"
             className={classNames(
               product.quantity === 1 && "cursor-not-allowed",
-              "rounded bg-gray-100 p-2 "
+              "rounded bg-gray-100 px-3 text-xl font-bold "
             )}
             onClick={() => decrementQuantity(product.id)}
             disabled={product.quantity === 1}
           >
-            <svg
-              className="w-3 h-3 text-gray-900 "
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 18 2"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M1 1h16"
-              />
-            </svg>
+            -
           </button>
           <span>{product.quantity}</span>
           <button
             type="button"
             className={classNames(
               product.quantity === 5 && "cursor-not-allowed",
-              "rounded bg-gray-100 p-2 "
+              "rounded bg-gray-100 px-3 text-xl font-bold  "
             )}
             disabled={product.quantity === 5}
             onClick={() => incrementQuantity(product.id)}
           >
-            <svg
-              className="w-3 h-3 text-gray-900 "
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 18 18"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 1v16M1 9h16"
-              />
-            </svg>
+            +
           </button>
         </div>
         <p className="mt-4 flex space-x-2 text-sm text-gray-700">

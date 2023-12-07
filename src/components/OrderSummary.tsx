@@ -1,10 +1,12 @@
 import { useProducts } from "@/context/product-context";
 import { usePriceDetails } from "@/hooks/usePriceDetails";
 import { QuestionMarkCircleIcon } from "@heroicons/react/20/solid";
+import { useRouter } from "next/navigation";
 
 const OrderSummary = () => {
   const { cart } = useProducts();
   const { subTotal, shippingCost, tax, totalPrice } = usePriceDetails(cart);
+  const router = useRouter();
 
   return (
     <section
@@ -66,8 +68,9 @@ const OrderSummary = () => {
 
       <div className="mt-6">
         <button
-          type="submit"
-          className="w-full rounded-md border border-transparent bg-red-500 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+          type="button"
+          onClick={() => router.push("/checkout")}
+          className="w-full rounded-md border border-transparent bg-red-500 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-red-600 focus:outline-none "
         >
           Checkout
         </button>
