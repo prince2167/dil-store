@@ -104,11 +104,11 @@ export default function Page() {
               <h2 className="sr-only">Images</h2>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-3 lg:gap-8">
-                {product?.images?.map((image: any) => (
+                {product?.images?.map((image: any, index) => (
                   <img
-                    key={image.url}
+                    key={index}
                     src={image.url}
-                    alt={image.url}
+                    alt={product.productName}
                     width={800}
                     height={800}
                     className={classNames(

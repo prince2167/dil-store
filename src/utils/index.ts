@@ -7,7 +7,7 @@ export const getSearchProducts = (products: IProducts[], query: string) => {
     return updatedProducts;
 };
 export const getSortedProducts = (products: IProducts[], sortBy: string) => {
-    console.log(sortBy, 'utils')
+
     if (sortBy === "low-to-high") {
         return [...products].sort((a, b) => a.price - b.price);
     }

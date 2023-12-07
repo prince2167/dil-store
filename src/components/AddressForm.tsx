@@ -1,5 +1,5 @@
 import { useProducts } from "@/context/product-context";
-import React from "react";
+import React, { FormEvent } from "react";
 
 const AddressForm = () => {
   const { address, setAddress, addresses, setAddresses } = useProducts();
@@ -11,7 +11,8 @@ const AddressForm = () => {
     }));
   };
 
-  const addNewAddress = () => {
+  const addNewAddress = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (
       !address.email &&
       !address.address &&
@@ -26,7 +27,7 @@ const AddressForm = () => {
     setAddress({ email: "", address: "", city: "", state: "", postalCode: "" });
   };
   return (
-    <form>
+    <form onSubmit={addNewAddress}>
       <div className="mx-auto max-w-2xl px-4 ">
         <div>
           <h3
@@ -150,8 +151,8 @@ const AddressForm = () => {
             </div>
           </div>
           <button
+            type="submit"
             className=" text-white rounded-md bg-red-500 mt-8 py-2 px-4"
-            onClick={addNewAddress}
           >
             Add new Address
           </button>
