@@ -1,12 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import Image from "next/image";
+import { useProducts } from "@/context/product-context";
+import Link from "next/link";
 import React from "react";
 
 const Product = ({ product }: any) => {
+  const { addProductTOCart } = useProducts();
   return (
-    <div key={product.id}>
+    <Link href={`product/${product.id}`} key={product.id}>
       <div className="relative">
         <div className="relative h-72 w-full overflow-hidden rounded-lg">
           <img
@@ -34,11 +36,11 @@ const Product = ({ product }: any) => {
         </div>
       </div>
       <div className="mt-6">
-        <button className="relative w-full flex items-center justify-center rounded-md border border-transparent bg-red-500 px-8 py-2 text-sm font-medium text-white hover:bg-red-400">
-          Add to bag
+        <button className="relative w-full flex items-center justify-center rounded-md border border-transparent bg-red-500 px-8 py-2 text-sm font-medium text-white hover:bg-red-600">
+          Add to cart
         </button>
       </div>
-    </div>
+    </Link>
   );
 };
 

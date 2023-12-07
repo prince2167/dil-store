@@ -12,7 +12,7 @@ import {
 
 interface IProductContext {
   products: IProducts[];
-  addProduct: (product: IProducts) => void;
+  addProductTOCart: (product: IProducts) => void;
   isLaoding: boolean;
 }
 
@@ -22,14 +22,18 @@ interface IProps {
 
 const ProductContext = createContext<IProductContext>({
   products: [],
-  addProduct(products) {},
+  addProductTOCart(products) {},
   isLaoding: false,
 });
 
 const ProductProvider = ({ children }: IProps) => {
   const [products, setProducts] = useState([]);
+  const [cartProducts, setCArtProducts] = useState<IProducts[]>([]);
   const [isLaoding, setIsLoading] = useState(false);
-  const addProduct = () => {};
+
+  const addProductTOCart = (product: IProducts) => {
+    setCArtProducts([...product, cartProducts]);
+  };
   console.log(products);
 
   const fetchProducts = async () => {
@@ -52,7 +56,7 @@ const ProductProvider = ({ children }: IProps) => {
     fetchProducts();
   }, []);
   return (
-    <ProductContext.Provider value={{ products, addProduct, isLaoding }}>
+    <ProductContext.Provider value={{ products, addProductTOCart, isLaoding }}>
       {children}
     </ProductContext.Provider>
   );
