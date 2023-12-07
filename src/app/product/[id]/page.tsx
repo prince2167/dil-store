@@ -29,12 +29,11 @@ function classNames(...classes: any) {
 }
 
 export default function Page() {
-  const { products } = useProducts();
+  const { products, addProductTOCart } = useProducts();
   const params = useParams();
   const productId = +params.id;
 
   const product = products.find((product) => product.id === productId);
-  console.log(product, "product");
 
   if (!product) return null;
   return (
@@ -85,7 +84,10 @@ export default function Page() {
                 </div>
               </div>
               <>
-                <button className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-red-500 px-8 py-3 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <button
+                  className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-red-500 px-8 py-3 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  onClick={() => addProductTOCart(product)}
+                >
                   Add to cart
                 </button>
               </>
@@ -98,7 +100,7 @@ export default function Page() {
               <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-3 lg:gap-8">
                 {product?.images?.map((image: any) => (
                   <img
-                    key={image.id}
+                    key={image.url}
                     src={image.url}
                     alt={image.url}
                     width={800}
