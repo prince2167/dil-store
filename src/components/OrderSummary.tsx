@@ -1,15 +1,10 @@
 import { useProducts } from "@/context/product-context";
+import { usePriceDetails } from "@/hooks/usePriceDetails";
 import { QuestionMarkCircleIcon } from "@heroicons/react/20/solid";
 
 const OrderSummary = () => {
   const { cart } = useProducts();
-  const subTotal = cart.reduce(
-    (acc, curr) => acc + curr.price * curr.quantity,
-    0
-  );
-  const shippingCost = 60;
-  const tax = Math.floor((subTotal * 10) / 100);
-  const totalPrice = subTotal + shippingCost + tax;
+  const { subTotal, shippingCost, tax, totalPrice } = usePriceDetails(cart);
 
   return (
     <section
