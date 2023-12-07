@@ -1,16 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useState } from "react";
+import { useProducts } from "@/context/product-context";
 import { StarIcon } from "@heroicons/react/20/solid";
-import { RadioGroup } from "@headlessui/react";
 import {
   CurrencyDollarIcon,
   GlobeAmericasIcon,
 } from "@heroicons/react/24/outline";
 import { useParams, useRouter } from "next/navigation";
-import { useProducts } from "@/context/product-context";
-
+import products from "../../../data.json";
+import classNames from "classnames";
 const policies = [
   {
     name: "International delivery",
@@ -24,12 +23,8 @@ const policies = [
   },
 ];
 
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(" ");
-}
-
 export default function Page() {
-  const { products, addProductTOCart, cart } = useProducts();
+  const { addProductTOCart, cart } = useProducts();
   const params = useParams();
   const productId = +params.id;
   const router = useRouter();

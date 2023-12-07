@@ -6,12 +6,12 @@ import Product from "./card/Product";
 import { getSearchProducts, getSortedProducts } from "@/utils";
 import { useState } from "react";
 import useDebounce from "@/hooks/useDebounce";
-
+import products from "../data.json";
 export default function ProductList() {
-  const { products, query } = useProducts();
+  const { query } = useProducts();
   const [sortBy, setSortBy] = useState("");
-
   const debouncedValue = useDebounce(query, 800);
+
   const searchedProducts = getSearchProducts(products, debouncedValue);
   const sortedProducts = getSortedProducts(searchedProducts, sortBy);
 

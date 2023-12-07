@@ -1,12 +1,32 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useProducts } from "@/context/product-context";
+import { IProducts } from "@/types";
 import { XMarkIcon, CheckIcon, ClockIcon } from "@heroicons/react/20/solid";
+import classNames from "classnames";
 import Link from "next/link";
-import React from "react";
 
-const Cart = ({ product, productIdx }: any) => {
-  const { removeFromCart } = useProducts();
+const Cart = ({ product }: any) => {
+  const { removeFromCart, cart, setCart, quantity, setQuantity } =
+    useProducts();
+
+  const incrementQuantity = (id: number) => {
+    const updatedCart = cart.map((product) =>
+      product.id === id
+        ? { ...product, quantity: product.quantity + 1 }
+        : product
+    );
+    setCart(updatedCart);
+  };
+  const decrementQuantity = (id: number) => {
+    const updatedCart = cart.map((product) =>
+      product.id === id
+        ? { ...product, quantity: product.quantity - 1 }
+        : product
+    );
+    setCart(updatedCart);
+  };
+
   return (
     <li key={product.id} className="flex py-6 sm:py-10">
       <div className="flex-shrink-0">
@@ -39,24 +59,6 @@ const Cart = ({ product, productIdx }: any) => {
           </div>
 
           <div className="mt-4 sm:mt-0 sm:pr-9">
-            <label htmlFor={`quantity-${productIdx}`} className="sr-only">
-              Quantity, {product.productName}
-            </label>
-            <select
-              id={`quantity-${productIdx}`}
-              name={`quantity-${productIdx}`}
-              className="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-            >
-              <option value={1}>1</option>
-              <option value={2}>2</option>
-              <option value={3}>3</option>
-              <option value={4}>4</option>
-              <option value={5}>5</option>
-              <option value={6}>6</option>
-              <option value={7}>7</option>
-              <option value={8}>8</option>
-            </select>
-
             <div className="absolute right-0 top-0">
               <button
                 type="button"
@@ -70,6 +72,59 @@ const Cart = ({ product, productIdx }: any) => {
           </div>
         </div>
 
+        <div className="  flex gap-6 items-center max-w-[8rem]">
+          <button
+            type="button"
+            className={classNames(
+              product.quantity === 1 && "cursor-not-allowed",
+              "rounded bg-gray-100 p-2 "
+            )}
+            onClick={() => decrementQuantity(product.id)}
+            disabled={product.quantity === 1}
+          >
+            <svg
+              className="w-3 h-3 text-gray-900 "
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 18 2"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M1 1h16"
+              />
+            </svg>
+          </button>
+          <span>{product.quantity}</span>
+          <button
+            type="button"
+            className={classNames(
+              product.quantity === 5 && "cursor-not-allowed",
+              "rounded bg-gray-100 p-2 "
+            )}
+            disabled={product.quantity === 5}
+            onClick={() => incrementQuantity(product.id)}
+          >
+            <svg
+              className="w-3 h-3 text-gray-900 "
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 18 18"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 1v16M1 9h16"
+              />
+            </svg>
+          </button>
+        </div>
         <p className="mt-4 flex space-x-2 text-sm text-gray-700">
           {product.inStock ? (
             <CheckIcon

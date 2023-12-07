@@ -2,7 +2,6 @@
 
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { IProducts } from "@/types";
-import axios from "axios";
 import React, {
   ReactNode,
   createContext,
@@ -12,13 +11,14 @@ import React, {
 } from "react";
 
 interface IProductContext {
-  products: IProducts[];
   addProductTOCart: (product: IProducts) => void;
   removeFromCart: (id: number) => void;
-  isLaoding: boolean;
   cart: IProducts[];
+  setCart: any;
   query: string;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
+  quantity: number;
+  setQuantity: React.Dispatch<React.SetStateAction<number>>;
 }
 
 interface IProps {
@@ -26,20 +26,20 @@ interface IProps {
 }
 
 const ProductContext = createContext<IProductContext>({
-  products: [],
   addProductTOCart(product) {},
   removeFromCart(id) {},
-  isLaoding: false,
   cart: [],
   query: "",
   setQuery: () => {},
+  setCart: () => {},
+  quantity: 1,
+  setQuantity: () => {},
 });
 
 const ProductProvider = ({ children }: IProps) => {
-  const [products, setProducts] = useState([]);
-  const [isLaoding, setIsLoading] = useState(false);
   const [cart, setCart] = useLocalStorage<IProducts[]>("cart", []);
   const [query, setQuery] = useState("");
+  const [quantity, setQuantity] = useState(1);
 
   const addProductTOCart = (product: IProducts) => {
     setCart([product, ...cart]);
@@ -49,35 +49,17 @@ const ProductProvider = ({ children }: IProps) => {
     setCart(updatedCart);
   };
 
-  const fetchProducts = async () => {
-    try {
-      setIsLoading(true);
-      const { data } = await axios.get(
-        "https://ecomm-backend-pc0f.onrender.com/products"
-      );
-      setProducts(data);
-      setIsLoading(false);
-    } catch (error) {
-      console.log(error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
   return (
     <ProductContext.Provider
       value={{
-        products,
         addProductTOCart,
-        isLaoding,
         cart,
+        setCart,
         removeFromCart,
         query,
         setQuery,
+        quantity,
+        setQuantity,
       }}
     >
       {children}
