@@ -3,7 +3,7 @@
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { IProducts } from "@/types";
 import axios from "axios";
-import {
+import React, {
   ReactNode,
   createContext,
   useContext,
@@ -17,6 +17,8 @@ interface IProductContext {
   removeFromCart: (id: number) => void;
   isLaoding: boolean;
   cart: IProducts[];
+  query: string;
+  setQuery: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface IProps {
@@ -29,12 +31,15 @@ const ProductContext = createContext<IProductContext>({
   removeFromCart(id) {},
   isLaoding: false,
   cart: [],
+  query: "",
+  setQuery: () => {},
 });
 
 const ProductProvider = ({ children }: IProps) => {
   const [products, setProducts] = useState([]);
   const [isLaoding, setIsLoading] = useState(false);
   const [cart, setCart] = useLocalStorage<IProducts[]>("cart", []);
+  const [query, setQuery] = useState("");
 
   const addProductTOCart = (product: IProducts) => {
     setCart([product, ...cart]);
@@ -65,7 +70,15 @@ const ProductProvider = ({ children }: IProps) => {
   }, []);
   return (
     <ProductContext.Provider
-      value={{ products, addProductTOCart, isLaoding, cart, removeFromCart }}
+      value={{
+        products,
+        addProductTOCart,
+        isLaoding,
+        cart,
+        removeFromCart,
+        query,
+        setQuery,
+      }}
     >
       {children}
     </ProductContext.Provider>

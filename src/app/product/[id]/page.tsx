@@ -8,7 +8,7 @@ import {
   CurrencyDollarIcon,
   GlobeAmericasIcon,
 } from "@heroicons/react/24/outline";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useProducts } from "@/context/product-context";
 
 const policies = [
@@ -29,11 +29,13 @@ function classNames(...classes: any) {
 }
 
 export default function Page() {
-  const { products, addProductTOCart } = useProducts();
+  const { products, addProductTOCart, cart } = useProducts();
   const params = useParams();
   const productId = +params.id;
+  const router = useRouter();
 
   const product = products.find((product) => product.id === productId);
+  const isInCart = cart.some((item) => item.id === productId);
 
   if (!product) return null;
   return (
@@ -66,7 +68,7 @@ export default function Page() {
                         key={rating}
                         className={classNames(
                           product.rating > rating
-                            ? "text-yellow-400"
+                            ? "text-red-500"
                             : "text-gray-200",
                           "h-5 w-5 flex-shrink-0"
                         )}
@@ -84,12 +86,21 @@ export default function Page() {
                 </div>
               </div>
               <>
-                <button
-                  className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-red-500 px-8 py-3 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  onClick={() => addProductTOCart(product)}
-                >
-                  Add to cart
-                </button>
+                {isInCart ? (
+                  <button
+                    className="mt-8 w-full flex items-center justify-center rounded-md border border-red-500 bg-white px-8 py-3 text-md  text-red-500 font-semibold"
+                    onClick={() => router.push("/cart")}
+                  >
+                    Go to cart
+                  </button>
+                ) : (
+                  <button
+                    className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-red-500 px-8 py-3 text-base font-medium text-white hover:bg-red-600 focus:outline-none"
+                    onClick={() => addProductTOCart(product)}
+                  >
+                    Add to cart
+                  </button>
+                )}
               </>
             </div>
 
