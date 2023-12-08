@@ -18,6 +18,12 @@ interface IAddress {
   state: string;
   postalCode: string;
 }
+interface IMyOrder {
+  products: IProducts[];
+  totalAmount: number;
+  transactionId: string;
+  purchaseDate: string;
+}
 interface IProductContext {
   addProductTOCart: (product: IProducts) => void;
   removeFromCart: (id: number) => void;
@@ -33,6 +39,8 @@ interface IProductContext {
   setAddresses: React.Dispatch<React.SetStateAction<IAddress[]>>;
   selectedAddress: {} | IAddress;
   setSelectedAddess: Dispatch<SetStateAction<{} | IAddress>>;
+  myOrder: IMyOrder;
+  setMyOrder: Dispatch<SetStateAction<IMyOrder>>;
 }
 
 interface IProps {
@@ -60,6 +68,13 @@ const ProductContext = createContext<IProductContext>({
   setAddresses: () => {},
   selectedAddress: {},
   setSelectedAddess: () => {},
+  myOrder: {
+    products: [],
+    totalAmount: 0,
+    transactionId: "",
+    purchaseDate: "",
+  },
+  setMyOrder: () => {},
 });
 
 const ProductProvider = ({ children }: IProps) => {
@@ -86,6 +101,11 @@ const ProductProvider = ({ children }: IProps) => {
   const [selectedAddress, setSelectedAddess] = useState<IAddress | {}>(
     addresses[0]
   );
+  const [myOrder, setMyOrder] = useLocalStorage<IMyOrder>(
+    "orders",
+    {} as IMyOrder
+  );
+
   const addProductTOCart = (product: IProducts) => {
     setCart([product, ...cart]);
   };
@@ -111,6 +131,8 @@ const ProductProvider = ({ children }: IProps) => {
         setAddresses,
         selectedAddress,
         setSelectedAddess,
+        myOrder,
+        setMyOrder,
       }}
     >
       {children}

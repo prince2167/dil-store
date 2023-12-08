@@ -1,5 +1,5 @@
 
-const loadScript = async (url) => {
+const loadScript = async (url: any) => {
     return new Promise((resolve) => {
         const script = document.createElement("script");
         script.src = url;
@@ -17,15 +17,19 @@ const loadScript = async (url) => {
     });
 };
 
-const handleCheckout = async (selectedAddress, totalPrice) => {
+
+
+
+
+const handleCheckout = async (selectedAddress: any, totalPrice: number) => {
     const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
 
 
     const razorpayOption = {
-        key: import.meta.env.VITE_APP_RAZORPAY_API_KEY,
+        key: "rzp_test_MOGxFrLtzC31Cw",
         amount: totalPrice * 100,
         currency: "INR",
-        name: "CLOTHIFY",
+        name: "Dil Store",
         description:
             "Unlock the power of style and elevate your wardrobe with clothify",
         image:
@@ -54,3 +58,32 @@ const handleCheckout = async (selectedAddress, totalPrice) => {
 };
 
 export { handleCheckout };
+
+// const handleCheckout = async (selectedAddress: any, totalPrice: number) => {
+//     if (!cartItem.length) {
+//         alert("please select address");
+//         return;
+//     }
+
+//     // call function for total amount
+//     const totalAmount = totalPrice
+
+//     //Razor-Pay Integrate//
+//     const options = {
+//         key: "rzp_test_MOGxFrLtzC31Cw",
+//         amount: totalAmount * 82 * 100 + 410,
+//         currency: "INR",
+//         name: "DIl Food",
+//         description: "Thank you for your test purchase",
+//         image: "",
+//         handler: handlePaymentSuccess,
+//         theme: {
+//             color: "#0e5db3",
+//         },
+//     };
+
+//     //Razor-Pay Failed Payment Handled//
+//     const razorpayInstance = new window.Razorpay(options);
+//     razorpayInstance.on("payment.failed", handlePaymentError);
+//     razorpayInstance.open();
+// };

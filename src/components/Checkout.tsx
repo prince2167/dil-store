@@ -1,13 +1,92 @@
 "use client";
 
-import { usePriceDetails } from "@/hooks/usePriceDetails";
-import AddressForm from "./AddressForm";
 import { useProducts } from "@/context/product-context";
+import { usePriceDetails } from "@/hooks/usePriceDetails";
 import classNames from "classnames";
+import { useRouter } from "next/navigation";
+import AddressForm from "./AddressForm";
+
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
+const loadScript = async (url: any) => {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = url;
+    script.async = true;
+
+    script.onload = () => {
+      resolve(true);
+    };
+
+    script.onerror = () => {
+      resolve(false);
+    };
+
+    document.body.appendChild(script);
+  });
+};
 
 const Checkout = () => {
-  const { cart, addresses, selectedAddress, setSelectedAddess } = useProducts();
+  const {
+    cart,
+    setCart,
+    myOrder,
+
+    setMyOrder,
+    addresses,
+    selectedAddress,
+    setSelectedAddess,
+  } = useProducts();
   const { subTotal, shippingCost, tax, totalPrice } = usePriceDetails(cart);
+  const router = useRouter();
+
+  const temp = [...cart];
+  const handlePaymentSuccess = (payment: any) => {
+    const totalAmount = temp.reduce(
+      (acc, curr) => acc + curr.price * curr.quantity,
+      0
+    );
+    setMyOrder({
+      ...myOrder,
+      products: temp,
+      totalAmount,
+      transactionId: payment.razorpay_payment_id,
+      purchaseDate: new Date().toDateString(),
+    });
+
+    setCart([]);
+    router.push("/myorder");
+    window.scrollTo({ top: 0 });
+  };
+
+  const handlePaymentError = () => {
+    alert("Payment Error:");
+  };
+
+  const handleCheckout = async () => {
+    const res = await loadScript(
+      "https://checkout.razorpay.com/v1/checkout.js"
+    );
+
+    const options = {
+      key: "rzp_test_MOGxFrLtzC31Cw",
+      amount: totalPrice * 100,
+      currency: "INR",
+      name: "DIl store",
+      description: "Thank you for your test purchase",
+      image: "",
+      handler: handlePaymentSuccess,
+      theme: {
+        color: "#0e5db3",
+      },
+    };
+    const razorpayInstance = new window.Razorpay(options);
+    razorpayInstance.on("payment.failed", handlePaymentError);
+    razorpayInstance.open();
+  };
 
   return (
     <div className="bg-white p-6">
@@ -71,7 +150,10 @@ const Checkout = () => {
                   <dd className="text-base">₹ {totalPrice.toFixed(2)}</dd>
                 </div>
                 {selectedAddress && (
-                  <button className="bg-white w-full text-red-500 text-xl py-2 rounded-md">
+                  <button
+                    className="bg-white w-full text-red-500 text-xl py-2 rounded-md"
+                    onClick={handleCheckout}
+                  >
                     Place order
                   </button>
                 )}

@@ -22,3 +22,28 @@ export const getSortedProducts = (products: IProducts[], sortBy: string) => {
     }
     return products;
 };
+
+export const generateRandomString = (): string => {
+    const length = 12;
+    const alphaChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const numericChars = '0123456789';
+    let result = '';
+
+    // Generate first two characters as alphabetic
+    for (let i = 0; i < 2; i++) {
+        const randomIndex = Math.floor(Math.random() * alphaChars.length);
+        result += alphaChars.charAt(randomIndex);
+    }
+
+    // Generate remaining characters as alphanumeric
+    for (let i = 2; i < length; i++) {
+        const characters = i % 2 === 0 ? alphaChars : numericChars;
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        result += characters.charAt(randomIndex);
+    }
+
+    return result;
+}
+
+
+
