@@ -5,6 +5,7 @@ import { usePriceDetails } from "@/hooks/usePriceDetails";
 import classNames from "classnames";
 import { useRouter } from "next/navigation";
 import AddressForm from "./AddressForm";
+import { isBrowser } from "@/utils";
 
 declare global {
   interface Window {
@@ -59,7 +60,7 @@ const Checkout = () => {
 
     setCart([]);
     router.push("/myorder");
-    window.scrollTo({ top: 0 });
+    if (isBrowser()) window.scrollTo({ top: 0 });
   };
 
   const handlePaymentError = () => {

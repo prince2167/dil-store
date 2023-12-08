@@ -47,3 +47,5 @@ export const generateRandomString = (): string => {
 
 
 
+
+export const isBrowser = () => typeof window !== 'undefined'
